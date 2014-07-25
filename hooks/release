@@ -13,5 +13,5 @@ cat >>/app/.profile.d/app-env.sh
 echo 'set +a' >>/app/.profile.d/app-env.sh"
 
 # Convert the release to an image
-docker commit `cat "$cidfile"` >"$app_dir/release.iid"
-docker rm `cat "$cidfile"` > /dev/null && rm -f "$cidfile"
+docker commit $(<"$cidfile") >"$app_dir/release.iid"
+docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
