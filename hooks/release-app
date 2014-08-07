@@ -6,7 +6,7 @@ cidfile="$app_dir/release.cid"
 
 # Load the release environment into the built app image
 $PLUSHU_ROOT/lib/runhook app-env $1 |
-  docker run -i --cidfile="$cidfile" `cat "$app_dir/build.iid"` /bin/bash -c \
+  docker run -i --cidfile="$cidfile" $(<"$app_dir/build.iid") /bin/bash -c \
 "mkdir -p /app/.profile.d
 printf 'set -a\n' >/app/.profile.d/app-env.sh
 cat >>/app/.profile.d/app-env.sh
