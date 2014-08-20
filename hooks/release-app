@@ -2,16 +2,21 @@
 set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
 
 app_dir="$PLUSHU_ROOT/apps/$1"
-cidfile="$app_dir/release.cid"
 
-# Load the release environment into the built app image
-"$PLUSHU_ROOT/lib/plushook" app-env $1 |
-  docker run -i --cidfile="$cidfile" $(<"$app_dir/build.iid") /bin/bash -c \
-"mkdir -p /app/.profile.d
-printf 'set -a\n\n' >/app/.profile.d/app-env.sh
-cat >>/app/.profile.d/app-env.sh
-printf '\nset +a\n' >>/app/.profile.d/app-env.sh"
+# If there's a build to base a release on
+if [[ -f "$app_dir/build.iid" ]]; then
 
-# Convert the release to an image
-docker commit $(<"$cidfile") >"$app_dir/release.iid"
-docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+  cidfile="$app_dir/release.cid"
+
+  # Load the release environment into the built app image
+  "$PLUSHU_ROOT/lib/plushook" app-env $1 |
+    docker run -i --cidfile="$cidfile" $(<"$app_dir/build.iid") /bin/bash -c \
+  "mkdir -p /app/.profile.d
+  printf 'set -a\n\n' >/app/.profile.d/app-env.sh
+  cat >>/app/.profile.d/app-env.sh
+  printf '\nset +a\n' >>/app/.profile.d/app-env.sh"
+
+  # Convert the release to an image
+  docker commit $(<"$cidfile") >"$app_dir/release.iid"
+  docker rm $(<"$cidfile") > /dev/null && rm -f "$cidfile"
+fi
