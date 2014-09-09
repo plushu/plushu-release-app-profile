@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
 
-app_dir="$PLUSHU_ROOT/apps/$1"
+app_dir="$PLUSHU_APPS_DIR/$1"
 
 # If there's a build to base a release on
 if [[ -f "$app_dir/build.iid" ]]; then
