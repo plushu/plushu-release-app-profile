@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ -n "$PLUSHU_TRACE" ]] && set -x
+
+app=$1
+app_dir=$PLUSHU_APPS_DIR/$app
+iidfile=$app_dir/release.iid
+
+# remove the release image (which will also prune the build image)
+if [[ -f "$iidfile" ]]; then
+  docker rmi "$(<"$iidfile")" > /dev/null
+  rm "$iidfile"
+fi
