@@ -5,8 +5,8 @@ app=$1
 app_dir=$PLUSHU_APPS_DIR/$app
 iidfile=$app_dir/release.iid
 
-# remove the release image (which will also prune the build image)
+# remove the current release image
 if [[ -f "$iidfile" ]]; then
-  docker rmi "$(<"$iidfile")" > /dev/null
+  docker rmi --no-prune "$(<"$iidfile")" > /dev/null
   rm "$iidfile"
 fi
