@@ -1,3 +1,3 @@
-# plushu-release-env
+# plushu-release-app-profile
 
-Adds environment variables to an App Container
+Makes app release image with plugin-provided profile script
