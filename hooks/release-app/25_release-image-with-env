@@ -9,12 +9,13 @@ if [[ -f "$app_dir/build.iid" ]]; then
   cidfile="$app_dir/release.cid"
 
   # Load the release environment into the built app image
-  "$PLUSHU_ROOT/lib/plushook" app-env $1 |
+  { "$PLUSHU_ROOT/lib/plushook" app-env $1
+    "$PLUSHU_ROOT/lib/plushook" app-profile $1; } |
     docker run -i --cidfile="$cidfile" $(<"$app_dir/build.iid") /bin/bash -c \
   "mkdir -p /app/.profile.d
-  printf 'set -a\n\n' >/app/.profile.d/app-env.sh
-  cat >>/app/.profile.d/app-env.sh
-  printf '\nset +a\n' >>/app/.profile.d/app-env.sh"
+  printf 'set -a\n\n' >/app/.profile.d/app-profile.sh
+  cat >>/app/.profile.d/app-profile.sh
+  printf '\nset +a\n' >>/app/.profile.d/app-profile.sh"
 
   # Convert the release to an image
   docker commit $(<"$cidfile") >"$app_dir/release.iid"
